@@ -21,7 +21,7 @@ This will build the application in release mode and create an executable file in
 To use the application, run the following command:
 
 ```
-./target/release/bcrypt-example <password> [options]
+./target/release/bc <password> [options]
 ```
 
 Replace `<password>` with the password you want to hash or verify.
@@ -37,19 +37,19 @@ The following options are available:
 To hash a password with the default cost factor (10), run the following command:
 
 ```
-./target/release/bcrypt-example mypassword
+./target/release/bc mypassword
 ```
 
 To hash a password with a custom cost factor (12), run the following command:
 
 ```
-./target/release/bcrypt-example mypassword -c 12
+./target/release/bc mypassword -c 12
 ```
 
 To verify a password hash, run the following command:
 
 ```
-./target/release/bcrypt-example mypassword -v '$2a$10$1....'
+./target/release/bc mypassword -v '$2a$10$1....'
 ```
 
 ## License

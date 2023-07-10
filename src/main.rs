@@ -7,7 +7,7 @@ use log::{LevelFilter, debug, error,};
 fn main() {
 
 
-    let matches = App::new("bcrypt-example")
+    let matches = App::new("bc")
         .arg(Arg::with_name("password")
             .required(true)
             .index(1)

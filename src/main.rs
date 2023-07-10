@@ -1,11 +1,7 @@
-// #[macro_use]
-
 use std::time::Instant;
 use bcrypt::{hash, verify};
 use clap::{App, Arg};
-use log::{LevelFilter, info, debug, error, trace,};
-// use env_logger::Builder;
-use std::io::Write;
+use log::{LevelFilter, debug, error,};
 
 
 fn main() {
@@ -66,6 +62,6 @@ fn main() {
         let hashed_password = hash(password, cost).unwrap();
         let hash_elapsed = hash_start_time.elapsed();
         debug!("Time taken to hash password: {:?}", hash_elapsed);
-        println!("{}", hashed_password);
+        print!("{}", hashed_password);
     }
 }

@@ -1,5 +1,3 @@
-GitHub Copilot: Sure, here's an example README file for the Rust project:
-
 # Bcrypt Example
 
 This is a Rust command-line application that demonstrates how to use the `bcrypt` crate to hash and verify passwords.

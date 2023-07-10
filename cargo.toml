@@ -1,9 +1,13 @@
 [package]
 name = "bcrypt-test"
 version = "0.1.0"
+edition = "2021"
 
 [registries.crates-io]
 protocol = "sparse"
 
 [dependencies]
-bcrypt = "0.9.0"
+bcrypt = "0.10.1"
+clap = "3.0.0-beta.4"
+log = "0.4.19"
+env_logger = "0.9"

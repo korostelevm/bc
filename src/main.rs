@@ -17,7 +17,7 @@ fn main() {
             .long("cost")
             .takes_value(true)
             .default_value("10")
-            .help("The cost factor to use when hashing the password"))
+            .help("The cost factor to use when hashing the password (default: 10) 4-16"))
         .arg(Arg::with_name("verify")
             .short('v')
             .long("verify")
@@ -41,7 +41,10 @@ fn main() {
     let verify_password = matches.is_present("verify");
     let hashed_password = matches.value_of("verify");
     let cost:u32 = matches.value_of("cost").unwrap_or("10").parse().unwrap_or(10);
-
+    if cost < 4 || cost > 16 {
+        error!("Cost must be between 4 and 16");
+        std::process::exit(1);
+    }
 
     if verify_password {
         let hashed_password = hashed_password.unwrap_or("");

@@ -1,60 +1,67 @@
-GitHub Copilot: Sure, here's an example README file for the Rust project:
+use std::time::Instant;
+use bcrypt::{hash, verify};
+use clap::{App, Arg};
+use log::{LevelFilter, debug, error,};
 
-# Bcrypt Example
 
-This is a Rust command-line application that demonstrates how to use the `bcrypt` crate to hash and verify passwords.
+fn main() {
 
-## Prerequisites
 
-To build and run this application, you need to have Rust and Cargo installed on your system. You can download Rust and Cargo from the official website: https://www.rust-lang.org/tools/install
+    let matches = App::new("bcrypt-example")
+        .arg(Arg::with_name("password")
+            .required(true)
+            .index(1)
+            .help("The password to hash or verify"))
+        .arg(Arg::with_name("cost")
+            .short('c')
+            .long("cost")
+            .takes_value(true)
+            .default_value("10")
+            .help("The cost factor to use when hashing the password"))
+        .arg(Arg::with_name("verify")
+            .short('v')
+            .long("verify")
+            .takes_value(true)
+            .help("Verify the password instead of hashing it ex.: -v '$2a$10$1....'"))
+        .arg(Arg::with_name("debug")
+            .short('d')
+            .long("debug")
+            .help("Verbose output"))
+        .get_matches();
 
-## Installation
+    let password = matches.value_of("password").unwrap();
+    let debug = matches.is_present("debug");
+    let level = if debug { LevelFilter::Debug } else { LevelFilter::Info };
+    env_logger::builder()
+    .filter_level(level)
+    .format_timestamp(None)
+    .init();
 
-To install the application, clone the repository and run the following command:
 
-```
-cargo build --release
-```
+    let verify_password = matches.is_present("verify");
+    let hashed_password = matches.value_of("verify");
+    let cost:u32 = matches.value_of("cost").unwrap_or("10").parse().unwrap_or(10);
 
-This will build the application in release mode and create an executable file in the `target/release` directory.
 
-## Usage
-
-To use the application, run the following command:
-
-```
-./target/release/bcrypt-example <password> [options]
-```
-
-Replace `<password>` with the password you want to hash or verify.
-
-The following options are available:
-
-- `-c, --cost <cost>`: The cost factor to use when hashing the password (default: 10).
-- `-v, --verify <hash>`: Verify the password instead of hashing it. Provide the hash to verify as an argument.
-- `-d, --debug`: Enable verbose output for debugging.
-
-## Examples
-
-To hash a password with the default cost factor (10), run the following command:
-
-```
-./target/release/bcrypt-example mypassword
-```
-
-To hash a password with a custom cost factor (12), run the following command:
-
-```
-./target/release/bcrypt-example mypassword -c 12
-```
-
-To verify a password hash, run the following command:
-
-```
-./target/release/bcrypt-example mypassword -v '$2a$10$1....'
-```
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
+    if verify_password {
+        let hashed_password = hashed_password.unwrap_or("");
+        dbg!(hashed_password);
+        let verify_start_time = Instant::now();
+        let valid = verify(password, hashed_password).unwrap_or_else(|error| {
+            error!("Error verifying password: {}", error);
+            error!("Invalid hash provided. Provided a valid hash with flag '-v' : -v '$2a$1....'");
+            false
+        });
+        // let valid = verify(password, hashed_password).unwrap_or(false);
+        let verify_elapsed = verify_start_time.elapsed();
+        debug!("Time taken to verify password: {:?}", verify_elapsed);
+        println!("Password is valid: {}", valid);
+    } else {
+        // Measure time taken to hash a password
+        let hash_start_time = Instant::now();
+        let hashed_password = hash(password, cost).unwrap();
+        let hash_elapsed = hash_start_time.elapsed();
+        debug!("Time taken to hash password: {:?}", hash_elapsed);
+        print!("{}", hashed_password);
+    }
+}

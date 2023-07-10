@@ -1,0 +1,9 @@
+[package]
+name = "bcrypt-test"
+version = "0.1.0"
+
+[registries.crates-io]
+protocol = "sparse"
+
+[dependencies]
+bcrypt = "0.9.0"
